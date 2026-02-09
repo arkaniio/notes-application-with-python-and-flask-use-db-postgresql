@@ -2,6 +2,7 @@ import os
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -16,6 +17,11 @@ def postgresql_url () -> str:
 class Config:
     SQLALCHEMY_DATABASE_URI = postgresql_url()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "yondaktaukoktanyasaya")
+    JWT_ALGORITHMS = "HS256"
+
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=8)
 
 def connection_db ():
     try:
