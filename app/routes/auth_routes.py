@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from app.services.auth_service import register_user
 from app.services.auth_service import login_user
+from app.utils.json import response_error
+from app.utils.json import response_success
 
 register_bp = Blueprint("register_bp", __name__)
 login_bp = Blueprint("login_bp", __name__)
@@ -15,11 +17,7 @@ def regsiter_route():
 
     #checking the data must be required when user wants to input their fields
     if not all(fields in data and data[fields] for fields in required_data):
-        return jsonify({
-            "data": None,
-            "message": "Failed to validate the fields of the user",
-            "success": False,
-        }), 403
+        return response_error(None)
 
     #put the request to reg_user function
     users, msg = register_user(
@@ -30,24 +28,10 @@ def regsiter_route():
 
     #if not user , then return a error 422 or http badrequest
     if not users :
-        return jsonify({
-            "data": None,
-            "message": msg,
-            "success": False
-        }), 403
-
-    #define the response structure from request client
-    users_data = {
-        "username": users.username,
-        "email": users.email,
-    }
+        return response_error(msg)
 
     #return the result of the routers
-    return jsonify({
-        "message": "Register has been successfully!",
-        "data": users_data,
-        "success": True
-    }), 201
+    return response_success(users)
 
 @login_bp.route("/", methods=["POST"])
 def login_route():
@@ -58,11 +42,7 @@ def login_route():
     #checking and validate for a required fields in user request!
     required = ["username", "password"]
     if not all(fields in data and data[fields] for fields in required):
-        return jsonify({
-            "message": "The field must be required!",
-            "data": None,
-            "success": False,
-        }), 403
+        return response_error(None)
     
     #mapping into a form request in a login_user 
     user_login, token, msg = login_user(
@@ -72,11 +52,7 @@ def login_route():
 
     #validate the users login must be exist when user wants to login himself
     if not user_login:
-        return jsonify({
-            "message": msg,
-            "data": None,
-            "success": False
-        }), 403
+        return response_error(msg)
 
     #mapping the data again before we 
     users_login_data = {
@@ -87,9 +63,5 @@ def login_route():
         "token": token
     }
 
-    return jsonify({
-        "message": "Successfully to login as a user!",
-        "data": users_login_data,
-        "success": True,
-    }), 200
+    return response_success(users_login_data)
 

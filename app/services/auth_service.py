@@ -17,7 +17,7 @@ def register_user(input_username, input_email, input_password):
         db.session.add(new_user)
         db.session.commit()
 
-        return new_user, "Register has been successfully"
+        return new_user.to_Json(), "Register has been successfully"
 
     except Exception as e:
         db.session.rollback()

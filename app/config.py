@@ -6,7 +6,7 @@ from datetime import timedelta
 
 load_dotenv()
 
-def postgresql_url () -> str:
+def postgresql_url() -> str:
     user = os.getenv("DB_USER", "appuser2")
     host = os.getenv("DB_HOST", "localhost")
     password = os.getenv("DB_PASSWORD", "app123")
@@ -21,9 +21,9 @@ class Config:
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "yondaktaukoktanyasaya")
     JWT_ALGORITHMS = "HS256"
 
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=8)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=12)
 
-def connection_db ():
+def connection_db():
     try:
         url = Config.SQLALCHEMY_DATABASE_URI
         connect_engine = create_engine(url)
