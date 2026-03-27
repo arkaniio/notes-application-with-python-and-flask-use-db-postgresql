@@ -30,10 +30,6 @@ def create_note(user_id, title, content, slug, status="public", password=None, p
         slug=slug,
         password_hint=(password_hint or None)
     )
-
-    #check if the status is protected , the password must be required
-    if status == "protected" and not password:
-        return None, "Status protected must have a password!"
     
     #check if the status is protected and the password is exist, it would be a hashing the password
     if status == "protected" and password:
@@ -107,7 +103,7 @@ def get_public_note(q=None, page=1, per_page=10, sort="created_at", order="desc"
 def get_public_notes_by_user_id(user_id, page=1, per_page=10, q=None, order="desc", sort="created_at"):
 
     #base query
-    notes = Note.query.filter(Note.deleted_at == None, Note.status == "public", Note.user_id == user_id)
+    notes = Note.query.filter(Note.deleted_at == None, Note.user_id == user_id)
 
     #validate the user id if the user id is not exist
     if not user_id:
@@ -162,7 +158,7 @@ def get_public_notes_by_user_id(user_id, page=1, per_page=10, q=None, order="des
 def get_not_by_slug(user_id, slug, password):
 
     #get note
-    note = Note.query.filter(slug == slug).first()
+    note = Note.query.filter(Note.slug == slug).first()
 
     #validate if the note is not exist
     if not note:

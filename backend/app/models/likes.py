@@ -36,12 +36,7 @@ class Like(db.Model):
                 "email": self.users.email
             }
         if include_note and self.notes:
-            data["note"] = {
-                "id": self.notes.id,
-                "title": self.notes.title,
-                "content": self.notes.content,
-                "status": self.notes.status,
-            }
+            data["note"] = self.notes.to_Json(include_user=True, include_like=False)
         
         return data
 

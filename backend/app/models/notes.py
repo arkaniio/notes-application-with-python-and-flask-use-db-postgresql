@@ -65,7 +65,7 @@ class Note(db.Model):
         }
         #validate the user if the note have a same user
         if include_user and self.users:
-            data["user"] = self.users.to_Json(include_note=False, include_like=True)
+            data["user"] = self.users.to_Json(include_note=False, include_like=False)
         if include_like:
             data["like"] = [like.to_Json(include_note=False, include_user=True) for like in self.likes]
 

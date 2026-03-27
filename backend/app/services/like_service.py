@@ -47,7 +47,7 @@ def toggle_like(note_id, user_id):
             db.session.rollback()
             return None, "Add like was not successed!"
 
-def get_like_by_user_id(user_id, note_id):
+def get_like_by_user_id(user_id, note_id=None):
     
     #base query for find the user
     user = User.query.get(user_id)
@@ -57,9 +57,14 @@ def get_like_by_user_id(user_id, note_id):
         return None, "Failed to find the id!"
     
     #base query for find the like by user id
-    likes = Like.query.filter((Like.note_id == note_id) & (Like.user_id == user.id)).all()
+    query = Like.query.filter(Like.user_id == user.id)
+    
+    if note_id:
+        query = query.filter(Like.note_id == note_id)
+        
+    likes = query.all()
     
     if not likes:
-        return None, "Failed to find the like!"
+        return [], "No likes found!"
     
-    return [like.to_Json(include_user=True, include_note=True) for like in likes], "Get like has been successfully!"
+    return [like.to_Json(include_user=True, include_note=True) for like in likes], "Get likes has been successfully!"
