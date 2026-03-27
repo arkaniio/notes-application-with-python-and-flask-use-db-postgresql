@@ -61,13 +61,12 @@ def get_public_note_routes():
         order=order,
     )
 
-    #validate if the notes and meta is not exist
     if not notes and not meta:
         return response_error(msg)
     
-    return response_success(notes, meta)
+    return response_success(notes, meta=meta)
 
-@note_bp.route("/", methods=["GET"])
+@note_bp.route("/me", methods=["GET"])
 @jwt_required()
 def get_notes_by_user_id():
 
@@ -96,7 +95,7 @@ def get_notes_by_user_id():
         return response_error(msg)
     
     return response_success(notes, meta)
-
+    
 @note_bp.route("/<string:slug>", methods=["GET"])
 @jwt_required(optional=True)
 def get_notes_by_slug(slug):
@@ -138,10 +137,14 @@ def update_note_routes(note_id):
     data = request.get_json()
 
     #looping into a function update
-    notes, msg = update_notes(user_id=user_id, note_id=note_id, data=data)
+    notes, msg = update_notes(
+        user_id=user_id, 
+        data=data,
+        note_id=note_id)
 
     #validate if the update is failed or invalid
     if not notes:
+        print(msg)
         return response_error(msg)
 
     return response_success(notes)

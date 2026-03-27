@@ -25,17 +25,17 @@ class Like(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "note_id": self.note_id,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None
         }
 
-        if include_user in self.users:
+        if include_user and self.users:
             data["user"] = {
                 "id": self.users.id,
                 "username": self.users.username,
                 "email": self.users.email
             }
-        if include_note in self.notes:
+        if include_note and self.notes:
             data["note"] = {
                 "id": self.notes.id,
                 "title": self.notes.title,

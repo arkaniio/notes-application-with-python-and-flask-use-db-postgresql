@@ -196,13 +196,7 @@ def get_not_by_slug(user_id, slug, password):
 def update_notes(note_id, data, user_id):
 
     #base query for find the right user
-    note = Note.query.filter_by(id = note_id, deleted_at = None).first()
-
-    print(note)
-
-    #checking if others user cannot update the others user note (for security development)
-    if user_id != note.user_id:
-        return None, "Failed to update others user note!"
+    note = Note.query.filter(Note.id == note_id, Note.deleted_at == None).first()
 
     #validate if the note is not exist
     if not note:
@@ -221,14 +215,17 @@ def update_notes(note_id, data, user_id):
         
         #if the user wants to update their status
         if "status" in data:
+            note.status = data["status"]
+            
             status = data["status"]
 
             #checking if the status type is invalid or not
-            if not ["private", "public", "protected"] in data:
+            if status not in ["private", "public", "protected"]:
                 return None, "Invalid status type!"
             
             note.status = status
 
+            #if the status is protected
             if status == "protected":
                 #looping because the status is enum in database
                 password = data.get("password")

@@ -26,4 +26,4 @@ def response_error(data, message="failed", status_code=400, success=False, hint=
     if hint is not None:
         response["hint"] = hint
     
-    return jsonify(response)
+    return jsonify(response), status_code

@@ -31,7 +31,7 @@ def regsiter_route():
         return response_error(msg)
 
     #return the result of the routers
-    return response_success(users)
+    return response_success(users, message=msg)
 
 @login_bp.route("/", methods=["POST"])
 def login_route():

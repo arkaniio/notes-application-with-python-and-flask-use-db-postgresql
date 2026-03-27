@@ -18,3 +18,12 @@ def like_route(note_id):
         return response_error(msg)
     
     return response_success(like)
+@like_bp.route("/<string:note_id>", methods=["GET"])
+@jwt_required()
+def get_all_like(note_id):
+    user_id = get_jwt_identity()
+    likes, msg = get_like_by_user_id(user_id=user_id, note_id=note_id)
+    if not likes:
+        return response_error(msg)
+    
+    return response_success(likes)
